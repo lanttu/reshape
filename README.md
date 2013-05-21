@@ -5,27 +5,45 @@ Library for reshaping Javascript objects. Like copying but with
 directives. Notation inspired by Angular.
 
 
-## Using
+### Directive examples
 
-    var reshapeUser = reshape({
-        firstname: '@name.first',
-        lastname: '@name.last,
-        username: '@'
-    });
+```js
 
-    var user = {
-        name: {
-            first: 'John',
-            last: 'Doe'
-        },
-        username: 'DoeJohn',
-        email: 'john.doe@com',
-        ...
-    };
+reshape({
+    name: '@name'
+});
 
-    var reshaped = reshapeUser(original);
+// This is same
+reshape({
+    name: '@'
+});
 
-    expect(reshaped).to.have.property('firstname', 'John');
-    expect(reshaped).to.have.property('lastname', 'Doe');
-    expect(reshaped).to.have.property('username', 'DoeJohn');
-    expect(reshaped).to.not.have.property('email');
+// And also this
+reshape(['name']);
+
+// Nesting
+reshape({
+    name: {
+        first: '@firstname',
+        last: '@lastname'
+    }
+});
+
+// Flattening
+reshape({
+    firstname: '@name.first',
+    lastname: '@name.last'
+});
+
+```
+
+
+### Using
+
+```js
+
+var reshapeUser = reshape(directive);
+var reshaped = reshapeUser(user);
+
+
+```
