@@ -1,13 +1,12 @@
 {
   "name": "reshape",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Library for reshaping Javascript objects.",
   "main": "index.js",
   "directories": {
     "test": "test"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "chai": "~1.6.0"
   },
