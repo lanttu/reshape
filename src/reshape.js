@@ -2,6 +2,23 @@
 
 var property = require('./property');
 
+
+// Opens implicit notations (only @)
+var openImplicit = function (obj, prefix) {
+    Object.getOwnPropertyNames(obj).forEach(function (propName) {
+
+        var path = prefix ? prefix + '.' + propName : '@' + propName;
+
+        var prop = obj[propName];
+        if (prop === '@') {
+            obj[propName] = path;
+        } else if (typeof prop === 'object') {
+            openImplicit(prop, path);
+        }
+    });
+};
+
+
 // Parses reshape intructions to single object.
 // Normalizes shorthand array notation to default notation
 // Latter definitions overwrite prior
@@ -30,13 +47,15 @@ var parseReshapeDefinition = function (definitions) {
         return dest;
     }, {});
 
+    openImplicit(combined);
+
     return combined;
 };
 
 
 
 
-var createXXX;
+var nestedProperty;
 
 var createMapping = function (definitions) {
 
@@ -53,7 +72,7 @@ var createMapping = function (definitions) {
 
         } else if (defType === 'object') {
             // Nested definitions
-            defFn = createXXX(def);
+            defFn = nestedProperty(def);
 
         } else if (defType === 'function') {
             // Custom function
@@ -75,7 +94,7 @@ var createMapping = function (definitions) {
 
 
 
-createXXX = function (definitions) {
+nestedProperty = function (definitions) {
     var mappingFns = createMapping(definitions);
     var properties = Object.getOwnPropertyNames(definitions);
 
@@ -95,7 +114,7 @@ createXXX = function (definitions) {
 module.exports = function transform() {
     var definitions = parseReshapeDefinition(Array.prototype.slice.call(arguments));
 
-    return createXXX(definitions);
+    return nestedProperty(definitions);
 };
 
 
